@@ -1,0 +1,165 @@
+<div class="dashboard-wrapper">
+  <div class="toast" *ngIf="mensaje" [class.error-toast]="tipoMensaje === 'error'">
+    <div class="toast-content">
+      <span>{{ tipoMensaje === 'error' ? '⚠️' : '✅' }} {{ mensaje }}</span>
+    </div>
+  </div>
+
+  <div class="glass-container">
+    <header class="main-header">
+      <div class="brand">
+        <div class="logo-bank">B</div>
+        <div class="brand-text">
+          <h1>Panel de Control</h1>
+          <p>Módulo de Gestión - Cajero #{{ idCajeroUrl }}</p>
+        </div>
+      </div>
+      <div class="polling-indicator">
+        <span class="dot pulse"></span> Sistema en línea
+      </div>
+    </header>
+
+    <div class="layout-grid">
+      <aside class="current-client-panel">
+        <div class="card active-card" [class.highlight]="clienteSiendoAtendido">
+          <div *ngIf="clienteSiendoAtendido; else noClient">
+            <div class="client-avatar">{{ clienteSiendoAtendido.nombre?.charAt(0) }}</div>
+            <div class="client-info">
+              <h2 class="name">{{ clienteSiendoAtendido.nombre }}</h2>
+              <span class="id-number">C.I: {{ clienteSiendoAtendido.cedula }}</span>
+              
+              <div class="age-badge" [class.has-age]="true">
+                <ng-container *ngIf="idCajeroUrl === 5">
+                   {{ clienteSiendoAtendido.edad || '---' }} años
+                </ng-container>
+                <ng-container *ngIf="idCajeroUrl !== 5">
+                   Monto: ${{ clienteSiendoAtendido.montoRegistrado || '0' }}
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="ticket-display">
+              <span class="code">{{ clienteSiendoAtendido.codigoTurno }}</span>
+              <span class="label">EN ATENCIÓN</span>
+            </div>
+
+            <div class="action-stack">
+              <button class="btn btn-primary" (click)="marcarAtendido(clienteSiendoAtendido)" [disabled]="enviando">
+                {{ idCajeroUrl === 5 ? 'Aperturar Cuenta' : 'Confirmar Transacción' }}
+              </button>
+              <button class="btn btn-link-cancel" (click)="cancelarTurno(clienteSiendoAtendido.ticketId)">
+                Cliente Ausente
+              </button>
+            </div>
+          </div>
+
+          <ng-template #noClient>
+            <div class="empty-state">
+              <div class="empty-icon">☕</div>
+              <h3>Módulo Libre</h3>
+              <p>No hay clientes siendo atendidos</p>
+              <button class="btn btn-call-main" (click)="llamarSiguiente()">Llamar Siguiente</button>
+            </div>
+          </ng-template>
+        </div>
+      </aside>
+
+      <section class="queue-panel">
+        <div class="card table-card">
+          <div class="card-header">
+            <h3>Fila de Espera</h3>
+            <span class="count">{{ cola.length }} personas</span>
+          </div>
+          <div class="table-responsive">
+            <table class="pro-table">
+              <thead>
+                <tr>
+                  <th>Turno</th>
+                  <th>Cliente</th>
+                  <th>{{ idCajeroUrl === 5 ? 'Edad' : 'Monto' }}</th>
+                  <th>Estado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let t of cola" [class.row-calling]="t.estado === 1">
+                  <td><span class="ticket-pill">{{ t.codigoTurno || 'S/C' }}</span></td>
+                  <td><strong>{{ t.nombre }}</strong></td>
+                  <td>
+                    <span class="age-text">
+                      {{ idCajeroUrl === 5 ? (t.montoRegistrado + ' años') : ('$' + t.montoRegistrado) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="status-tag" [class.tag-call]="t.estado === 1">
+                      {{ t.estado === 0 ? 'Esperando' : 'En Módulo' }}
+                    </span>
+                  </td>
+                  <td class="actions-cell">
+                    <button *ngIf="t.estado === 0" class="btn-call-row" (click)="llamarSiguiente()">Llamar</button>
+                    <button class="btn-icon-delete" (click)="cancelarTurno(t.ticketId)">🗑️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="mostrarModal">
+    <div class="modal-box animate-pop-in">
+      <div class="modal-header">
+        <h2>Confirmar Apertura de Cuenta</h2>
+        <button class="btn-close" (click)="cerrarModales()">×</button>
+      </div>
+      <div class="modal-body" *ngIf="clienteSiendoAtendido">
+        <div class="form-group">
+          <label>Edad del Cliente</label>
+          <input type="number" [(ngModel)]="clienteSiendoAtendido.edad" class="pro-input">
+        </div>
+        <div class="form-group">
+          <label>Número de Cuenta</label>
+          <input type="text" [(ngModel)]="datosApertura.numeroCuenta" class="pro-input highlight-input">
+        </div>
+        <div class="form-group">
+          <label>Saldo Inicial ($)</label>
+          <input type="number" [(ngModel)]="datosApertura.saldoInicial" class="pro-input">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModales()">Cancelar</button>
+        <button class="btn btn-primary" (click)="confirmarAtencionGeneral(true)" [disabled]="enviando">
+          Finalizar Apertura
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="mostrarModalTransaccion">
+    <div class="modal-box animate-pop-in">
+      <div class="modal-header">
+        <h2>Confirmar {{ idCajeroUrl === 1 ? 'Depósito' : idCajeroUrl === 2 ? 'Retiro' : idCajeroUrl === 3 ? 'Cobro' : 'Pago' }}</h2>
+        <button class="btn-close" (click)="cerrarModales()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="client-preview-mini">
+          <p>Cliente: <strong>{{ clienteSiendoAtendido?.nombre }}</strong></p>
+          <p>Operación: <strong>Módulo {{ idCajeroUrl }}</strong></p>
+        </div>
+        <div class="form-group">
+          <label>Monto a Procesar ($)</label>
+          <input type="number" [(ngModel)]="montoOperacion" class="pro-input highlight-input">
+          <small>Confirme la cantidad de dinero física antes de guardar.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModales()">Cancelar</button>
+        <button class="btn btn-primary" (click)="confirmarAtencionGeneral(false)" [disabled]="enviando || montoOperacion <= 0">
+          Confirmar y Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

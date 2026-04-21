@@ -1,0 +1,32 @@
+<nav class="navbar-pro" *ngIf="authService.isLoggedIn()">
+  <div class="nav-container">
+    <div class="nav-logo" routerLink="/bank/cajeros">
+      <div class="logo-icon">AK</div>
+      <span>AK <b>Bank</b></span>
+    </div>
+
+    <ul class="nav-links">
+      <li>
+        <a routerLink="/bank/cajeros" routerLinkActive="active">
+          <span class="icon">🏧</span> Cajeros
+        </a>
+      </li>
+      <li>
+        <a routerLink="/bank/movimientos" routerLinkActive="active">
+          <span class="icon">📊</span> Historial
+        </a>
+      </li>
+      <li>
+        <a routerLink="/chat" routerLinkActive="active">
+          <span class="icon">🤖</span> AI Assistant
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="btn-logout" (click)="onLogout()">
+        Cerrar Sesión
+      </button>
+    </div>
+  </div>
+</nav>

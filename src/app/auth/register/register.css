@@ -1,0 +1,193 @@
+/* Contenedor Principal */
+.register-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 20px;
+}
+
+.register-card {
+  background: white;
+  width: 100%;
+  max-width: 450px;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* Encabezado e Iconos Superiores */
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.icon-badge {
+  width: 50px;
+  height: 50px;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 1rem;
+}
+
+.icon-badge svg {
+  width: 28px; /* Tamaño controlado del icono superior */
+  height: 28px;
+}
+
+/* Filas y Campos de Entrada */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.input-field {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+/* El "Wrapper" que contiene el icono y el input */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.input-wrapper:focus-within {
+  border-color: #2563eb;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* AQUÍ CONTROLAMOS EL TAMAÑO DE LOS ICONOS DE LOS INPUTS */
+.field-icon {
+  width: 18px;    /* Icono pequeño y elegante */
+  height: 18px;
+  margin-left: 12px;
+  color: #94a3b8;
+  flex-shrink: 0; /* Evita que se aplaste */
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+/* Estilo para el campo de saldo (Solo lectura) */
+.readonly {
+  background: #f8fafc;
+  opacity: 0.7;
+}
+
+/* Botón Pro */
+.btn-primary-pro {
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+
+.btn-primary-pro:hover {
+  background: #1d4ed8;
+}
+
+.btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Footer y Otros */
+.footer-links {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.footer-links a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.error-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+.error-icon {
+  width: 16px;
+  height: 16px;
+}
+/* Asegura que el input ocupe el espacio restante al lado del icono */
+.input-wrapper input {
+  flex: 1; /* Esto es clave para que el input crezca y muestre el texto */
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.95rem;
+  color: #1e293b; /* Color del texto que escribes */
+}
+
+/* Estilo específico para los Placeholders */
+.input-wrapper input::placeholder {
+  color: #94a3b8; /* Gris suave, muy profesional */
+  opacity: 1;     /* Necesario para Firefox */
+  font-weight: 400;
+}
+
+/* Si el input está deshabilitado o es readonly */
+.input-wrapper.readonly input {
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+/* Evita que el SVG gigante rompa el alineamiento si olvidaste el CSS anterior */
+.field-icon {
+  width: 18px !important;
+  height: 18px !important;
+  margin-left: 12px;
+  color: #64748b;
+  flex-shrink: 0;
+}

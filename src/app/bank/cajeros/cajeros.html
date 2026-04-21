@@ -1,0 +1,163 @@
+<div class="dashboard-wrapper">
+  <aside class="sidebar-pro">
+    <div class="sidebar-content" *ngIf="usuario; else loadingUser">
+      <div class="user-profile-card">
+        <div class="avatar-container">
+          <div class="avatar-circle">{{ usuario?.Nombre?.charAt(0) || 'U' }}</div>
+          <span class="online-indicator"></span>
+        </div>
+        
+        <div class="profile-text">
+          <h3>{{ usuario?.Nombre }}</h3>
+          <span class="user-id">C.I. {{ usuario?.Cedula }}</span>
+        </div>
+
+        <div class="status-badge" [class.unverified]="isCajeroBloqueado(1)">
+          <span class="dot"></span>
+          {{ isCajeroBloqueado(1) ? 'Cuenta Pendiente' : 'Cliente Verificado' }}
+        </div>
+
+        <div class="account-card animate-pop-in" *ngIf="!isCajeroBloqueado(1)">
+          <div class="card-glass-header">
+            <div class="chip-icon"></div>
+            <span class="bank-name">PROYECTO BANCARIO</span>
+          </div>
+          <div class="card-number">{{ usuario?.NumeroDeCuenta }}</div>
+          <div class="card-footer-info">
+            <span class="label">SALDO DISPONIBLE</span>
+            <span class="balance-value">{{ usuario?.Saldo | currency:'USD' }}</span>
+          </div>
+        </div>
+        
+        <div class="sidebar-alert animate-bounce" *ngIf="ticketActivo && (ticketActivo.estado === 1 || ticketActivo.Estado === 1)">
+          <div class="alert-info">
+            <div class="alert-icon">🔔</div>
+            <div class="alert-text">
+              <strong>¡SU TURNO!</strong>
+              <span>Pase al Módulo 0{{ ticketActivo.idCajero || ticketActivo.IdCajero }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #loadingUser>
+      <div class="skeleton-sidebar"><div class="spinner"></div></div>
+    </ng-template>
+  </aside>
+
+  <main class="main-viewport">
+    
+    <div class="status-monitor-container animate-pop-in" *ngIf="ticketActivo">
+      <div class="monitor-grid">
+        
+        <div class="monitor-card shadow-lg" [class.is-calling]="ticketActivo.estado === 1 || ticketActivo.Estado === 1">
+          <div class="monitor-icon" [class.pulse]="ticketActivo.estado === 1 || ticketActivo.Estado === 1">
+            {{ (ticketActivo.estado === 1 || ticketActivo.Estado === 1) ? '🔔' : '⏳' }}
+          </div>
+
+          <div class="monitor-info">
+            <span class="status-tag">
+              {{ (ticketActivo.estado === 1 || ticketActivo.Estado === 1) ? '¡ATENCIÓN INMEDIATA!' : 'POSICIÓN EN COLA' }}
+            </span>
+            <h2 class="turno-display">{{ ticketActivo.codigoTurno }}</h2>
+            <p class="modulo-label">Módulo de Atención: 0{{ ticketActivo.idCajero || ticketActivo.IdCajero }}</p>
+            
+            <div class="form-interaction-area" *ngIf="ticketActivo.estado === 1 || ticketActivo.Estado === 1">
+              <div *ngIf="!datosEnviados; else datosProcesando">
+                
+                <div class="form-apertura-inline">
+                  <p class="form-hint">
+                    {{ (ticketActivo.idCajero === 5 || ticketActivo.IdCajero === 5) ? 'Complete los datos para su nueva cuenta:' : 'Ingrese el monto de la operación:' }}
+                  </p>
+                  
+                  <div class="input-row">
+                    <ng-container *ngIf="ticketActivo.idCajero === 5 || ticketActivo.IdCajero === 5">
+                      <div class="field-group">
+                        <label>Edad</label>
+                        <input type="number" [(ngModel)]="edadUsuario" placeholder="20" class="input-mini">
+                      </div>
+                      <div class="field-group">
+                        <label>Saldo Inicial ($)</label>
+                        <input type="number" [(ngModel)]="saldoApertura" placeholder="Monto" class="input-mini">
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="ticketActivo.idCajero !== 5 && ticketActivo.IdCajero !== 5">
+                      <div class="field-group">
+                        <label>Monto</label>
+                        <input type="number" [(ngModel)]="montoOperacion" placeholder="0.00" class="input-mini">
+                      </div>
+                    </ng-container>
+
+                    <button class="btn-send-data" 
+                            (click)="(ticketActivo.idCajero === 5 || ticketActivo.IdCajero === 5) ? enviarDatosApertura() : enviarDatosOperacion()"
+                            [disabled]="enviandoDatos">
+                      {{ enviandoDatos ? '...' : 'ENVIAR' }}
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+              <ng-template #datosProcesando>
+                 <div class="success-message">
+                    <span class="icon">✓</span>
+                    <p>Datos enviados. El cajero está procesando su solicitud.</p>
+                 </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-card glass-effect">
+          <h3>Siguientes Pasos</h3>
+          <ul class="steps-list">
+            <li class="step-done"><span class="step-num">1</span> Ticket generado: <strong>{{ ticketActivo.codigoTurno }}</strong></li>
+            <li [class.step-active]="ticketActivo.estado === 0" [class.step-done]="ticketActivo.estado > 0"><span class="step-num">2</span> Espere el llamado.</li>
+            <li [class.step-next]="ticketActivo.estado === 1" [class.step-done]="datosEnviados"><span class="step-num">3</span> Envíe los datos solicitados.</li>
+            <li><span class="step-num">4</span> Retire su comprobante.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!ticketActivo">
+      <header class="main-header">
+        <h1>Terminal de Atención</h1>
+        <p>Seleccione el servicio que desea realizar.</p>
+      </header>
+
+      <div class="grid-container">
+        <div *ngFor="let c of cajerosConfig" 
+             class="cajero-card" 
+             [class.locked-card]="isCajeroBloqueado(c.id)"
+             (click)="solicitarTicket(c.id)">
+          
+          <div class="card-top">
+            <span class="module-tag">MÓDULO 0{{ c.id }}</span>
+            <span class="lock-icon" *ngIf="isCajeroBloqueado(c.id)">🔒</span>
+          </div>
+          
+          <div class="card-mid">
+            <div class="icon-service">
+              {{ c.id === 1 ? '📥' : c.id === 2 ? '📤' : c.id === 3 ? '📜' : c.id === 4 ? '💳' : '🏦' }}
+            </div>
+            <h4>{{ c.nombre }}</h4>
+            <p>{{ c.desc }}</p>
+          </div>
+          
+          <div class="card-bottom">
+            <button class="btn-ticket" [disabled]="isCajeroBloqueado(c.id)">
+              {{ isCajeroBloqueado(c.id) ? (c.id === 5 ? 'Cuenta Lista' : 'Requiere Cuenta') : 'Obtener Turno' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </main>
+
+  <div class="toast-notification animate-slide-down" [class.error-toast]="tipoMensaje === 'error'" *ngIf="mensaje">
+    <div class="toast-content">
+      <span class="toast-text">{{ mensaje }}</span>
+    </div>
+  </div>
+</div>

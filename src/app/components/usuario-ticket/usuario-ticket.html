@@ -1,0 +1,68 @@
+<div class="user-app-container">
+  <div class="notification-toast" *ngIf="datosTicket?.estado === 1 && !formularioEnviado">
+    <span class="pulse-dot"></span>
+    ¡Es tu turno! Por favor, ingresa los datos.
+  </div>
+
+  <div class="glass-card">
+    <div class="ticket-header">
+      <div class="brand-mini">
+        <span class="logo-b">B</span>
+        <span>Banco Digital</span>
+      </div>
+      <div class="ticket-id">
+        <span class="label">TU TURNO</span>
+        <h1 class="code">{{ datosTicket?.codigoTurno || '...' }}</h1>
+      </div>
+    </div>
+
+    <div class="ticket-body">
+      
+      <div *ngIf="datosTicket?.estado === 0" class="state-container">
+        <div class="loader-ring"><div></div><div></div><div></div><div></div></div>
+        <h3>En espera</h3>
+        <p>Estamos trabajando para atenderte pronto. Mantén esta pantalla abierta.</p>
+      </div>
+
+      <div *ngIf="datosTicket?.estado === 1 && !formularioEnviado" class="state-container animate-in">
+        <div class="action-alert">
+          <span class="icon">✍️</span>
+          <h3>Completa tu operación</h3>
+        </div>
+
+        <div class="form-group">
+          <label>Monto a procesar</label>
+          <div class="input-wrapper">
+            <span class="currency">$</span>
+            <input type="number" [(ngModel)]="formulario.monto" placeholder="0.00">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Concepto / Nota</label>
+          <textarea [(ngModel)]="formulario.descripcion" placeholder="Ej: Pago de servicios..."></textarea>
+        </div>
+
+        <button class="btn-confirm" (click)="enviarDatos()">
+          Enviar al Cajero
+        </button>
+      </div>
+
+      <div *ngIf="datosTicket?.estado === 1 && formularioEnviado" class="state-container">
+        <div class="waiting-approval">
+          <div class="spinner"></div>
+          <h3>Procesando...</h3>
+          <p>El cajero está validando tus datos en este momento.</p>
+        </div>
+      </div>
+
+      <div *ngIf="datosTicket?.estado === 2" class="state-container success-state">
+        <div class="check-icon">✓</div>
+        <h3>¡Operación Exitosa!</h3>
+        <p>Gracias por tu paciencia. Ya puedes retirarte.</p>
+        <button class="btn-outline" onclick="window.location.reload()">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+</div>

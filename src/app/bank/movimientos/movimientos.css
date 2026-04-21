@@ -1,0 +1,107 @@
+.history-wrapper {
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.history-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.history-header {
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+.history-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1a1a1a;
+}
+
+.subtitle {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* Botón Actualizar */
+.btn-refresh {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  background: #004a99;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-refresh:hover { background: #003366; }
+.spinning { animation: rotate 1s linear infinite; }
+
+/* Tabla */
+.table-container { padding: 1rem; }
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modern-table th {
+  text-align: left;
+  padding: 1rem;
+  color: #495057;
+  font-weight: 600;
+  border-bottom: 2px solid #f1f3f5;
+}
+
+.row-item {
+  transition: background 0.2s;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.row-item:hover { background: #f8f9fa; }
+
+.row-item td { padding: 1.2rem 1rem; }
+
+/* Etiquetas de Operación */
+.type-tag {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.op-deposit { background: #e6fcf5; color: #099268; }
+.op-withdrawal { background: #fff5f5; color: #fa5252; }
+.op-cheque { background: #f3f0ff; color: #7950f2; }
+.op-payment { background: #fff9db; color: #f08c00; }
+.op-opening { background: #e7f5ff; color: #1c7ed6; }
+
+/* Celdas Especiales */
+.date-col { display: flex; flex-direction: column; }
+.sub-date { font-size: 0.8rem; color: #adb5bd; }
+
+.amount-col { font-weight: 700; }
+.pos { color: #099268; }
+.neg { color: #fa5252; }
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 0;
+  color: #adb5bd;
+}

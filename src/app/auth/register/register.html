@@ -1,0 +1,94 @@
+<div class="register-screen">
+  <div class="register-card shadow-lg">
+    <header class="form-header">
+      <div class="icon-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
+      </div>
+      <h2>Crea tu Perfil Bancario</h2>
+      <p>Completa tus datos para empezar a operar</p>
+    </header>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      
+      <div class="form-row">
+        <div class="input-field">
+          <label>Nombre</label>
+          <div class="input-wrapper">
+            <input type="text" formControlName="nombre" placeholder="Ej: Alan">
+          </div>
+        </div>
+
+        <div class="input-field">
+          <label>Apellido</label>
+          <div class="input-wrapper">
+            <input type="text" formControlName="apellido" placeholder="Ej: Ortiz">
+          </div>
+        </div>
+      </div>
+
+      <div class="input-field">
+        <label>Cédula de Identidad</label>
+        <div class="input-wrapper">
+          <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+            <line x1="7" y1="8" x2="17" y2="8"></line>
+            <line x1="7" y1="12" x2="17" y2="12"></line>
+            <line x1="7" y1="16" x2="12" y2="16"></line>
+          </svg>
+          <input type="text" formControlName="cedula" placeholder="Solo números">
+        </div>
+      </div>
+      
+      <div class="input-field">
+        <label>Contraseña</label>
+        <div class="input-wrapper">
+          <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <input type="password" formControlName="password" placeholder="Mínimo 6 caracteres">
+        </div>
+      </div>
+
+      <div class="input-field">
+        <label>Depósito Inicial ($)</label>
+        <div class="input-wrapper readonly">
+          <input type="number" formControlName="saldoInicial" readonly>
+        </div>
+      </div>
+
+      <div class="checkbox-field">
+        <label class="toggle-container">
+          <input type="checkbox" id="tieneCuenta" formControlName="tieneCuenta">
+          <span class="toggle-label">¿Deseas abrir una cuenta ahora?</span>
+        </label>
+      </div>
+
+      <div class="error-container" *ngIf="errorMsg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="error-icon">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>{{ errorMsg }}</span>
+      </div>
+
+      <button type="submit" class="btn-primary-pro" [disabled]="registerForm.invalid">
+        <span>Finalizar Registro</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="btn-icon">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+
+      <div class="footer-links">
+        <p>¿Ya tienes cuenta? <a routerLink="/login">Regresa al Login</a></p>
+      </div>
+    </form>
+  </div>
+</div>

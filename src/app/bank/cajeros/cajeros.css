@@ -1,0 +1,554 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:host {
+  --primary: #0f172a;
+  --accent: #3b82f6;
+  --accent-dark: #1d4ed8;
+  --success: #10b981;
+  --danger: #ef4444;
+  --bg-app: #f8fafc;
+  --sidebar-w: 360px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.dashboard-wrapper {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: 100vh;
+  background: var(--bg-app);
+}
+
+/* SIDEBAR */
+.sidebar-pro {
+  background: white;
+  border-right: 1px solid #e2e8f0;
+  padding: 40px 30px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.avatar-container { position: relative; width: 100px; margin: 0 auto 20px; }
+.avatar-circle {
+  width: 100px; height: 100px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  border-radius: 32px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 2.5rem; font-weight: 800;
+  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+}
+.online-indicator {
+  position: absolute; bottom: 0; right: 0; width: 20px; height: 20px;
+  background: var(--success); border: 4px solid white; border-radius: 50%;
+}
+
+.profile-text { text-align: center; margin-bottom: 25px; }
+.profile-text h3 { font-size: 1.5rem; color: var(--primary); margin: 0; }
+.profile-text .user-id { color: #64748b; font-size: 0.9rem; font-weight: 600; }
+
+.status-badge {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px; border-radius: 12px; font-size: 0.85rem; font-weight: 700;
+  background: #f0fdf4; color: #166534; margin-bottom: 30px;
+}
+.status-badge.unverified { background: #fef2f2; color: #991b1b; }
+.status-badge .dot { width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
+
+/* TARJETA BANCARIA SIDEBAR */
+.account-card {
+  background: #1e293b; border-radius: 20px; padding: 20px; color: white;
+  box-shadow: 0 15px 30px rgba(15, 23, 42, 0.2);
+}
+.card-glass-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+.chip-icon { width: 35px; height: 25px; background: #475569; border-radius: 5px; }
+.bank-name { font-size: 0.6rem; font-weight: 800; letter-spacing: 1px; }
+.card-number { font-size: 1.1rem; font-family: monospace; letter-spacing: 2px; margin-bottom: 20px; }
+.balance-value { display: block; font-size: 1.5rem; font-weight: 800; color: #38bdf8; }
+
+/* BANNER DE LLAMADO (MAIN VIEWPORT) */
+.call-banner {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  padding: 25px 35px;
+  border-radius: 24px;
+  margin-bottom: 40px;
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.call-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine { to { left: 200%; } }
+
+.banner-content { display: flex; align-items: center; gap: 20px; position: relative; z-index: 2; }
+.pulse-icon {
+  font-size: 2.2rem; background: rgba(255, 255, 255, 0.2);
+  padding: 15px; border-radius: 20px;
+  animation: bell-swing 1s infinite alternate cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+@keyframes bell-swing { from { transform: rotate(-15deg); } to { transform: rotate(15deg); } }
+
+.banner-text h3 { margin: 0; font-size: 1.4rem; font-weight: 800; }
+.banner-text p { margin: 5px 0 0; font-size: 1rem; opacity: 0.9; }
+
+.btn-go-operation {
+  margin-left: auto; background: #10b981; color: white;
+  border: none; padding: 16px 32px; border-radius: 16px;
+  font-weight: 800; cursor: pointer; transition: var(--transition);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.btn-go-operation:hover { background: #059669; transform: scale(1.05); }
+
+/* MAIN VIEWPORT & GRID */
+.main-viewport { padding: 60px; min-width: 0; }
+.main-header h1 { font-size: 2.8rem; font-weight: 800; color: var(--primary); margin: 0; }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.cajero-card {
+  background: white; border-radius: 24px; padding: 30px;
+  border: 1px solid #e2e8f0; transition: var(--transition);
+  display: flex; flex-direction: column; cursor: pointer;
+}
+.cajero-card:hover:not(.locked-card) {
+  transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); border-color: var(--accent);
+}
+
+.icon-wrapper {
+  width: 55px; height: 55px; background: #eff6ff; color: var(--accent);
+  border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+}
+
+.btn-ticket {
+  width: 100%; padding: 15px; border-radius: 15px; border: none;
+  background: #f1f5f9; font-weight: 700; transition: var(--transition);
+}
+.cajero-card:hover:not(.locked-card) .btn-ticket { background: var(--accent); color: white; }
+
+/* TOAST NOTIFICATION */
+.toast-notification {
+  position: fixed; bottom: 30px; right: 30px;
+  background: #1e293b; color: white;
+  padding: 16px 24px; border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  z-index: 1000; min-width: 300px;
+}
+.toast-notification.error { border-left: 6px solid var(--danger); }
+.toast-content { display: flex; align-items: center; gap: 15px; }
+.toast-text { flex-grow: 1; font-weight: 600; font-size: 0.9rem; }
+.btn-close-toast { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; opacity: 0.5; }
+.btn-close-toast:hover { opacity: 1; }
+
+/* SIDEBAR ALERT (TURNO) */
+.sidebar-alert {
+  margin-top: 20px; background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border-radius: 20px; padding: 15px; color: white;
+  display: flex; flex-direction: column; gap: 15px;
+}
+.alert-icon { animation: shake 0.5s infinite alternate; }
+
+/* ANIMACIONES */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  from { transform: rotate(-10deg); }
+  to { transform: rotate(10deg); }
+}
+
+.animate-slide-down { animation: slideDown 0.5s ease-out; }
+.animate-pop-in { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 1100px) {
+  .dashboard-wrapper { grid-template-columns: 1fr; }
+  .sidebar-pro { height: auto; position: relative; border-right: none; }
+}
+.call-banner {
+  display: block !important; /* Asegura que no esté oculto por otra clase */
+  position: relative;
+  z-index: 9999; /* El número más alto para que esté por encima de todo */
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  min-height: 80px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.main-viewport {
+  display: flex;
+  flex-direction: column; /* Esto ayuda a que el banner empuje el contenido hacia abajo */
+}
+/* MONITOR DE ESTADO */
+.status-monitor-container {
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.monitor-card {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  padding: 25px 35px;
+  border-radius: 24px;
+  background: white;
+  border: 2px dashed #e2e8f0;
+  transition: all 0.4s ease;
+}
+
+/* Estilo cuando está activo (Espera) */
+.monitor-card.active {
+  border-style: solid;
+  border-color: transparent;
+  background: #1e293b;
+  color: white;
+  box-shadow: 0 15px 30px rgba(30, 41, 59, 0.15);
+}
+
+/* Estilo cuando es su Turno (Llamado) */
+.monitor-card.is-calling {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4);
+}
+
+.monitor-icon {
+  font-size: 2.5rem;
+  background: rgba(241, 245, 249, 0.1);
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+}
+
+.monitor-card.empty .monitor-icon {
+  background: #f1f5f9;
+}
+
+.status-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  margin-bottom: 8px;
+}
+
+.monitor-info h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.monitor-info p {
+  margin: 5px 0 0;
+  opacity: 0.8;
+  font-size: 0.95rem;
+}
+
+/* Botón de acción rápida */
+.btn-atender {
+  margin-left: auto;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-atender:hover {
+  transform: scale(1.05);
+  background: #059669;
+}
+
+/* Animación de pulso para el icono de campana */
+.pulse {
+  animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+.form-apertura-inline {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+  border-left: 4px solid #2ecc71;
+}
+
+.input-mini {
+  width: 80px;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.btn-send-data {
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.account-preview-success {
+  background: rgba(46, 204, 113, 0.2);
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #2ecc71;
+  color: #2ecc71;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.account-preview-success strong {
+  display: block;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+}
+/* --- BOTÓN COMPLETAR APERTURA (SIDEBAR) --- */
+.btn-sidebar-action {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: linear-gradient(135deg, #007bff, #0056b3); /* Azul vibrante */
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 91, 179, 0.4);
+}
+
+/* Efecto de brillo que atraviesa el botón */
+.btn-sidebar-action::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 20%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(30deg);
+  transition: all 0.1s;
+  animation: shine-sweep 3s infinite;
+}
+
+/* Animación de la luz pasando */
+@keyframes shine-sweep {
+  0% { left: -60%; }
+  20% { left: 120%; }
+  100% { left: 120%; }
+}
+
+/* Interacción al pasar el mouse */
+.btn-sidebar-action:hover {
+  background: linear-gradient(135deg, #0056b3, #004085);
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px rgba(0, 91, 179, 0.6);
+}
+
+/* Animación de entrada cuando aparece el turno */
+.animate-pop-in {
+  animation: pop-in 0.5s cubic-bezier(0.26, 0.53, 0.74, 1.48);
+}
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Si el botón está dentro de un aviso de éxito (Opcional: cambiar a verde) */
+.sidebar-alert.success .btn-sidebar-action {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+/* Tarjeta Deshabilitada */
+.locked-card {
+  opacity: 0.6;
+  filter: grayscale(0.8);
+  cursor: not-allowed !important;
+  pointer-events: none; /* Evita clics */
+  border: 1px dashed #ccc !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+.locked-card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.lock-icon {
+  font-size: 0.9rem;
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Estilo para cuando hay un error de validación (saldo) */
+.error-toast {
+  background: #ff4d4d !important;
+  border-left: 5px solid #b30000;
+}
+
+/* Efecto de pulso solo si el botón está habilitado */
+.cajero-card:not(.locked-card):hover .icon-service {
+  transform: scale(1.1);
+  transition: 0.3s;
+}
+/* Layout del Monitor cuando hay ticket */
+.monitor-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+  .monitor-grid { grid-template-columns: 1fr; }
+}
+
+.turno-display {
+  font-size: 4rem;
+  font-weight: 800;
+  color: #004a99;
+  margin: 0.5rem 0;
+  letter-spacing: -2px;
+}
+
+/* Tarjeta de Guía */
+.guide-card {
+  padding: 2rem;
+  border-radius: 20px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.steps-list li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 1.5rem;
+  color: #adb5bd;
+  transition: 0.3s;
+}
+
+.step-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Estados de los pasos */
+.step-done { color: #099268 !important; }
+.step-done .step-num { background: #e6fcf5; color: #099268; border: 1px solid; }
+
+.step-active { color: #1a1a1a !important; font-weight: 600; }
+.step-active .step-num { background: #004a99; color: white; transform: scale(1.2); }
+
+/* Banner Inferior */
+.promo-banner-mini {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 15px;
+  background: #e7f5ff;
+  border: 1px solid #a5d8ff;
+}
+
+.promo-content {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.promo-icon { font-size: 2rem; }
+.promo-text h4 { margin: 0; color: #1864ab; }
+.promo-text p { margin: 0; font-size: 0.9rem; color: #495057; }
+
+.success-message {
+  background: #e6fcf5;
+  color: #099268;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+.input-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap; /* Por si la pantalla es pequeña */
+}
+
+.input-group-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mini-label {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.input-mini {
+  width: 100px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}

@@ -1,0 +1,75 @@
+<div class="login-screen">
+  <div class="brand-panel">
+    <div class="brand-content">
+      <svg class="bank-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 21H21V19H3V21ZM5 17H7V8H5V17ZM11 17H13V8H11V17ZM17 17H19V8H17V17ZM3 6V4L12 0L21 4V6H3Z" fill="white"/>
+      </svg>
+      <h1>AK Bank</h1>
+      <p>Tu banca digital, simple y segura.</p>
+    </div>
+    <div class="illustration"></div>
+  </div>
+
+  <div class="form-panel">
+    <div class="form-box">
+      <h2>Iniciar Sesión</h2>
+      <p class="subtitle">Ingresa tu cédula para acceder a tu panel.</p>
+
+      <div class="input-group" [class.error]="errorMessage">
+        <label for="cedula">Cédula de Identidad</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.33 4 18V20H20V18C20 15.33 14.67 14 12 14Z" fill="#A0AEC0"/>
+          </svg>
+          <input 
+            type="text" 
+            id="cedula" 
+            [(ngModel)]="cedula" 
+            name="cedula"
+            placeholder="Ej: 12345678"
+            class="form-input"
+            (keyup.enter)="onLogin()"
+            [disabled]="isLoading">
+        </div>
+        <span *ngIf="errorMessage" class="error-message">{{ errorMessage }}</span>
+      </div>
+      <div class="input-group" [class.error]="errorMessage" style="margin-top: 1rem;">
+  <label for="password">Contraseña</label>
+  <div class="input-wrapper">
+    <svg class="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 18px;">
+      <path d="M18 8H17V6C17 3.24 14.76 1 12 1C9.24 1 7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM9 6C9 4.34 10.34 3 12 3C13.66 3 15 4.34 15 6V8H9V6ZM12 17C10.9 17 10 16.1 10 15C10 13.9 10.9 13 12 13C13.1 13 14 13.9 14 15C14 16.1 13.1 17 12 17Z" fill="#A0AEC0"/>
+    </svg>
+    <input 
+      type="password" 
+      id="password" 
+      [(ngModel)]="password" 
+      name="password"
+      placeholder="••••••••"
+      class="form-input"
+      (keyup.enter)="onLogin()"
+      [disabled]="isLoading">
+  </div>
+  <span *ngIf="errorMessage" class="error-message" style="color: #e74c3c; font-size: 0.85rem; margin-top: 5px; display: block;">
+    {{ errorMessage }}
+  </span>
+</div>
+
+      <button (click)="onLogin()" class="btn-primary" [class.loading]="isLoading" [disabled]="isLoading">
+        <span *ngIf="!isLoading" class="btn-text">Entrar</span>
+        <div *ngIf="isLoading" class="spinner"></div>
+      </button>
+
+      <div class="separator">
+        <span>O</span>
+      </div>
+
+      <a routerLink="/register" class="btn-secondary" [class.disabled]="isLoading">
+        Crear Cuenta Nueva
+      </a>
+
+      <footer class="login-footer">
+        <p>© 2026 ProyectoBancario Ltd. Todos los derechos reservados.</p>
+      </footer>
+    </div>
+  </div>
+</div>

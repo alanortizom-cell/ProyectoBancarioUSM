@@ -1,0 +1,51 @@
+<div class="history-wrapper">
+  <div class="history-container glass-effect">
+    <header class="history-header">
+      <div class="header-info">
+        <h1>Historial de Movimientos</h1>
+        <p class="subtitle">Estructura de Datos: <strong>Pila (LIFO)</strong></p>
+      </div>
+      <button class="btn-refresh" (click)="cargarHistorial()" [class.spinning]="cargando">
+        <span class="icon">🔄</span> Actualizar
+      </button>
+    </header>
+
+    <div class="table-container">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>Fecha y Hora</th>
+            <th>Operación</th>
+            <th>Monto</th>
+            <th>Saldo Resultante</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mov of pilaMovimientos" class="row-item">
+            <td class="date-col">
+              <span class="main-date">{{ mov.fecha | date:'dd MMM, yyyy' }}</span>
+              <span class="sub-date">{{ mov.fecha | date:'hh:mm a' }}</span>
+            </td>
+            <td>
+              <div class="type-tag" [ngClass]="getTipoConfig(mov.tipo).class">
+                <span class="tag-label">{{ getTipoConfig(mov.tipo).label }}</span>
+              </div>
+            </td>
+            <td class="amount-col" [ngClass]="{'neg': mov.tipo === 2 || mov.tipo === 4, 'pos': mov.tipo !== 2 && mov.tipo !== 4}">
+              {{ (mov.tipo === 2 || mov.tipo === 4 ? -mov.monto : mov.monto) | currency:'USD':'symbol':'1.2-2' }}
+            </td>
+            <td class="balance-col">
+              <strong>{{ mov.saldoResultante | currency:'USD' }}</strong>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty-state" *ngIf="pilaMovimientos.length === 0 && !cargando">
+        <div class="empty-img">📂</div>
+        <h3>Sin movimientos</h3>
+        <p>No se han encontrado registros para esta cuenta.</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="chat-wrapper">
+  <div class="chat-window">
+    <header class="chat-header">
+      <div class="bot-info">
+        <div class="bot-avatar">AI</div>
+        <div>
+          <h3>Asistente Virtual</h3>
+          <span class="online-tag">En línea</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="chat-body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+      <div *ngFor="let msg of chatLog" [ngClass]="['message', msg.sender]">
+        <div class="bubble">
+          {{ msg.texto }}
+          <span class="time">{{ msg.fecha | date:'HH:mm' }}</span>
+        </div>
+      </div>
+
+      <div class="message bot" *ngIf="isTyping">
+        <div class="bubble typing">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <footer class="chat-input-area">
+      <input 
+        type="text" 
+        [(ngModel)]="nuevoMensaje" 
+        (keyup.enter)="enviar()"
+        placeholder="Escribe tu consulta aquí..."
+        [disabled]="isTyping">
+      <button (click)="enviar()" [disabled]="isTyping || !nuevoMensaje">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="white"/>
+        </svg>
+      </button>
+    </footer>
+  </div>
+</div>
